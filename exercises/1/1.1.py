@@ -5,13 +5,17 @@ from collections import Counter
 import itertools
 
 
-def get_all_words_defs():
+def initialize_dict():
     defs = {}
     defs.setdefault("courage", [])
     defs.setdefault("paper", [])
     defs.setdefault("apprehension", [])
     defs.setdefault("sharpener", [])
+    return defs
 
+
+def get_all_words_defs():
+    defs = initialize_dict()
     defs_file = RESOURCES_PATH / "defs.csv"
 
     with open(defs_file) as f:
@@ -54,11 +58,26 @@ def average_similarity(defs):
 
 
 def calculate_similarities():
+    results = initialize_dict()
     all_words_defs = get_all_words_defs()
     for word in ("courage", "paper", "apprehension", "sharpener"):
         single_word_defs = all_words_defs.get(word)
-        print(word, average_similarity(single_word_defs))
+        results[word] = average_similarity(single_word_defs)
+    return results
+
+
+def print_aggregations():
+    similarities = calculate_similarities()
+    abstract = (similarities["courage"] + similarities["apprehension"]) / 2
+    concrete = (similarities["paper"] + similarities["sharpener"]) / 2
+    generic = (similarities["courage"] + similarities["paper"]) / 2
+    specific = (similarities["apprehension"] + similarities["sharpener"]) / 2
+
+    print("astratto", abstract)
+    print("concreto", concrete)
+    print("generico", generic)
+    print("speifico", specific)
 
 
 if __name__ == "__main__":
-    calculate_similarities()
+    print_aggregations()
