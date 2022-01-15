@@ -19,7 +19,6 @@ def get_all_words_defs():
     defs_file = RESOURCES_PATH / "defs.csv"
 
     with open(defs_file) as f:
-
         reader = csv.reader(f, delimiter=',')
         for row in reader:
             defs.get("courage").append(preprocess(row[1]))
