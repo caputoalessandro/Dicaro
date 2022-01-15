@@ -1,0 +1,1 @@
+from .resources_path import RESOURCES_PATH
