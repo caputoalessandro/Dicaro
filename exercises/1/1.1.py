@@ -40,11 +40,6 @@ def get_words_counts(defs):
 
 
 def similarity(definition, words_counts):
-    # intersection = set.intersection(*defs.get(word))
-    # l'intersezione tra le definizioni è nulla per cui utilizzeremo un altro criterio:
-    # il punteggio di similarità  sarà dato dalla somma delle frequenze delle parole utilizzate nella definizione
-    # diviso la lunghezza della definizione
-
     freq_sum = sum(words_counts[word] for word in definition)
     return freq_sum / len(definition)
 
@@ -56,27 +51,49 @@ def average_similarity(defs):
     return sum(similarities) / len(similarities)
 
 
-def calculate_similarities():
+def compute_similarities():
     results = initialize_dict()
     all_words_defs = get_all_words_defs()
+
     for word in ("courage", "paper", "apprehension", "sharpener"):
         single_word_defs = all_words_defs.get(word)
         results[word] = average_similarity(single_word_defs)
+
     return results
 
 
-def print_aggregations():
-    similarities = calculate_similarities()
-    abstract = (similarities["courage"] + similarities["apprehension"]) / 2
-    concrete = (similarities["paper"] + similarities["sharpener"]) / 2
-    generic = (similarities["courage"] + similarities["paper"]) / 2
-    specific = (similarities["apprehension"] + similarities["sharpener"]) / 2
+def compute_aggregations():
+    similarities = compute_similarities()
 
-    print("astratto", abstract)
-    print("concreto", concrete)
-    print("generico", generic)
-    print("speifico", specific)
+    result = []
+
+    aggregations = [
+        ("abstract", "courage", "apprehension"),
+        ("concrete", "paper", "sharpener"),
+        ("generic", "courage", "paper"),
+        ("specific", "apprehension", "sharpener")
+    ]
+
+    for aggregation in aggregations:
+        mean_similarity = (similarities[aggregation[1]] + similarities[aggregation[2]]) / 2
+        result.append((aggregation[0], mean_similarity))
+
+    return similarities, result
+
+
+def print_results():
+    similarities, aggregations = compute_aggregations()
+
+    print("------ SIMILARITIES ------")
+    for word, similarity in similarities.items():
+        print(word, similarity)
+
+    print("\n")
+
+    print("------ AGGREGATIONS ------")
+    for aggregation, mean_similarity in aggregations:
+        print(aggregation, mean_similarity)
 
 
 if __name__ == "__main__":
-    print_aggregations()
+    print_results()
