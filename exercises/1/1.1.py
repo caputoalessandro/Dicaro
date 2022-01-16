@@ -51,7 +51,7 @@ def average_similarity(defs):
     return sum(similarities) / len(similarities)
 
 
-def compute_similarities():
+def get_similarities():
     results = initialize_dict()
     all_words_defs = get_all_words_defs()
 
@@ -62,8 +62,8 @@ def compute_similarities():
     return results
 
 
-def compute_aggregations():
-    similarities = compute_similarities()
+def get_aggregations():
+    similarities = get_similarities()
 
     result = []
 
@@ -82,7 +82,7 @@ def compute_aggregations():
 
 
 def print_results():
-    similarities, aggregations = compute_aggregations()
+    similarities, aggregations = get_aggregations()
 
     print("------ SIMILARITIES ------")
     for word, similarity in similarities.items():
