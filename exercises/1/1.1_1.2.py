@@ -1,3 +1,4 @@
+import nltk
 from res import RESOURCES_PATH
 from exercises.utils import preprocess
 import csv
@@ -81,8 +82,24 @@ def get_aggregations():
     return similarities, result
 
 
+def get_similarty_explanation():
+    all_words_defs = get_all_words_defs()
+    result = []
+
+    for word in ("courage", "paper", "apprehension", "sharpener"):
+        single_word_defs = all_words_defs.get(word)
+        words_counts = get_words_counts(single_word_defs)
+        mfw = dict(words_counts.most_common(10)).keys()
+        tagged = nltk.pos_tag(list(mfw))
+        adj_noun = [word for word, tag in tagged if tag == "NN" or tag == "JJ"]
+        result.append((word, adj_noun))
+
+    return result
+
+
 def print_results():
     similarities, aggregations = get_aggregations()
+    explanation = get_similarty_explanation()
 
     print("------ SIMILARITIES ------")
     for word, similarity in similarities.items():
@@ -94,6 +111,13 @@ def print_results():
     for aggregation, mean_similarity in aggregations:
         print(aggregation, mean_similarity)
 
+    print("\n")
+
+    print("------ MOST FREQUENT WORDS ------")
+    for word, frequent_words in explanation:
+        print(word, frequent_words)
+
 
 if __name__ == "__main__":
     print_results()
+

@@ -1,6 +1,8 @@
-# Report esercitazione 1 
+# Report esercitazioni
 
-## 1.1 
+## 1
+
+### 1.1
 
 In questo esercizio abbiamo provato due calcoli di similarità differenti.
 Il primo metodo consiste nel misurare la similarità come rapporto tra 
