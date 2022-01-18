@@ -1,4 +1,4 @@
-domain	feature type	concept	feature2	pf	feature3 alternatives	participant list
+domain	feature type	concept	feature	pf	feature alternatives	participant list
 nonliving	visual perceptual	accordion	has keys	22	has keys; a keyboard	p 1 2 3 6 7 12 16 20 23 25 26 27 19 22 30 / 4 9 11 13 18 24 29
 nonliving	taxonomic	accordion	is a musical instrument	20	is a musical instrument	p 1 3 4 5 7 8 10 11 13 15 16 17 18 19 20 21 22 27 28 29
 nonliving	functional	accordion	does make music	10	does make music; is musical; is used in music; is used to play music; does play music	p 2 3 17 19 25 / 14 26 / 5 / 13 / 10

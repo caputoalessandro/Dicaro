@@ -26,14 +26,14 @@ def make_csv_from_dat():
 
 
 def get_concepts_features(path):
-    table = pd.read_fwf(path)
+    table = pd.read_fwf(path,colspecs='infer')
     # domain = table["domain"]
     print(table)
 
 
 def main():
     make_csv_from_dat()
-    csv_path = RESOURCES_PATH / "norms.csv"
+    # csv_path = RESOURCES_PATH / "norms.csv"
     dat_path = RESOURCES_PATH / "norms.dat"
     get_concepts_features(dat_path)
     print("we")
