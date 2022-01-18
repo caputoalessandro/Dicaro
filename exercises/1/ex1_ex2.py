@@ -1,10 +1,9 @@
 import nltk
 from res import RESOURCES_PATH
-from exercises.utils import preprocess
 import csv
 from collections import Counter
 import itertools
-
+from exercises.utils import preprocess
 
 WORDS = ["courage", "paper", "apprehension", "sharpener"]
 
@@ -57,9 +56,7 @@ def get_similarities():
     return results
 
 
-def get_aggregations():
-    similarities = get_similarities()
-
+def get_aggregations(similarities ):
     result = []
 
     aggregations = [
@@ -73,7 +70,7 @@ def get_aggregations():
         mean_similarity = (similarities[aggregation[1]] + similarities[aggregation[2]]) / 2
         result.append((aggregation[0], mean_similarity))
 
-    return similarities, result
+    return result
 
 
 def get_similarty_explanation():
@@ -112,7 +109,8 @@ def print_results(similarities, aggregations, explanation):
 
 
 def main():
-    similarities, aggregations = get_aggregations()
+    similarities = get_similarities()
+    aggregations = get_aggregations(similarities)
     explanation = get_similarty_explanation()
     print_results(similarities, aggregations, explanation)
 
