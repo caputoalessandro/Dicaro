@@ -6,26 +6,22 @@ from collections import Counter
 import itertools
 
 
+WORDS = ["courage", "paper", "apprehension", "sharpener"]
+
+
 def initialize_dict():
-    defs = {}
-    defs.setdefault("courage", [])
-    defs.setdefault("paper", [])
-    defs.setdefault("apprehension", [])
-    defs.setdefault("sharpener", [])
-    return defs
+    return {word: [] for word in WORDS}
 
 
 def get_all_words_defs():
     defs = initialize_dict()
     defs_file = RESOURCES_PATH / "defs.csv"
 
-    with open(defs_file) as f:
+    with defs_file.open() as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
-            defs.get("courage").append(preprocess(row[1]))
-            defs.get("paper").append(preprocess(row[2]))
-            defs.get("apprehension").append(preprocess(row[3]))
-            defs.get("sharpener").append(preprocess(row[4]))
+            for word, col in zip(WORDS, row[1:]):
+                defs[word].append(preprocess(col))
 
     return defs
 
@@ -35,9 +31,7 @@ def normalize(values):
 
 
 def get_words_counts(defs):
-    joined = list(itertools.chain.from_iterable(defs))
-    counter = Counter(joined)
-    return counter
+    return Counter(itertools.chain.from_iterable(defs))
 
 
 def similarity(definition, words_counts):
@@ -56,7 +50,7 @@ def get_similarities():
     results = initialize_dict()
     all_words_defs = get_all_words_defs()
 
-    for word in ("courage", "paper", "apprehension", "sharpener"):
+    for word in WORDS:
         single_word_defs = all_words_defs.get(word)
         results[word] = average_similarity(single_word_defs)
 
@@ -86,7 +80,7 @@ def get_similarty_explanation():
     all_words_defs = get_all_words_defs()
     result = []
 
-    for word in ("courage", "paper", "apprehension", "sharpener"):
+    for word in WORDS:
         single_word_defs = all_words_defs.get(word)
         words_counts = get_words_counts(single_word_defs)
         mfw = dict(words_counts.most_common(10)).keys()
