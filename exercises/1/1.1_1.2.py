@@ -77,6 +77,7 @@ def get_aggregations():
 
 
 def get_similarty_explanation():
+    # Prende le prime 10 parole più frequenti e restituisce solo i nomi e gli aggettivi
     all_words_defs = get_all_words_defs()
     result = []
 
@@ -91,9 +92,7 @@ def get_similarty_explanation():
     return result
 
 
-def print_results():
-    similarities, aggregations = get_aggregations()
-    explanation = get_similarty_explanation()
+def print_results(similarities, aggregations, explanation):
 
     print("------ SIMILARITIES ------")
     for word, similarity in similarities.items():
@@ -112,6 +111,12 @@ def print_results():
         print(word, frequent_words)
 
 
+def main():
+    similarities, aggregations = get_aggregations()
+    explanation = get_similarty_explanation()
+    print_results(similarities, aggregations, explanation)
+
+
 if __name__ == "__main__":
-    print_results()
+    main()
 
