@@ -1,6 +1,6 @@
 from res import RESOURCES_PATH
 import pandas as pd
-from lesk import lesk
+from exercises.lesk import lesk
 from exercises.utils import preprocess
 from nltk.corpus import wordnet as wn
 from exercises.utils import get_nouns, get_adjectives
@@ -61,19 +61,14 @@ def connect_resources(cf_dict):
     mapping = {}
 
     for concept, pn_features in cf_dict.items():
-
         if not wn.synsets(concept):
             continue
 
         pn_features = join_features(pn_features)
         best_sense = find_best_sense(concept, pn_features)
-
         wn_features = get_features_from_wn_def(best_sense)
-
         pn_features = get_adjectives(preprocess(pn_features))
-
         to_add = set(pn_features) - set(wn_features)
-
         mapping[concept] = {"wn_features": wn_features,
                             "new_features": list(to_add)[:3]}
 
