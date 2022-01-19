@@ -2,8 +2,9 @@ from res import RESOURCES_PATH
 import pandas as pd
 from lesk import lesk
 from exercises.utils import preprocess
-import nltk
 from nltk.corpus import wordnet as wn
+from exercises.utils import get_nouns, get_adjectives
+import random
 
 
 # 1 cerca concetto preso da property  norm su wordnet
@@ -32,7 +33,7 @@ def get_concepts_features():
     return convert_to_concept_feature_dict(splitted_dict)
 
 
-def tokenize_features(features):
+def join_features(features):
     res = []
     for feature in features:
         for word in feature.split():
@@ -41,17 +42,7 @@ def tokenize_features(features):
                 res.extend(splitted)
             else:
                 res.append(word)
-    return res
-
-
-def get_adjectives(text):
-    tagged = nltk.pos_tag(text)
-    return [word for word, tag in tagged if tag == "JJ"]
-
-
-def get_nouns(text):
-    tagged = nltk.pos_tag(text)
-    return [word for word, tag in tagged if tag == "NN"]
+    return "".join(word + " " for word in res)
 
 
 def get_features_from_wn_def(sense):
@@ -62,7 +53,7 @@ def get_features_from_wn_def(sense):
 
 
 def find_best_sense(concept, features):
-    pn_features = tokenize_features(features)
+    pn_features = join_features(features)
     return lesk(concept, pn_features)
 
 
@@ -74,10 +65,12 @@ def connect_resources(cf_dict):
         if not wn.synsets(concept):
             continue
 
+        pn_features = join_features(pn_features)
         best_sense = find_best_sense(concept, pn_features)
 
         wn_features = get_features_from_wn_def(best_sense)
-        pn_features = get_adjectives(pn_features)
+
+        pn_features = get_adjectives(preprocess(pn_features))
 
         to_add = set(pn_features) - set(wn_features)
 
@@ -87,10 +80,19 @@ def connect_resources(cf_dict):
     return mapping
 
 
+def print_random_concept(dict):
+    while 1:
+        key = random.choice(list(dict))
+        print("CONCEPT: ", key)
+        print("WORDNET FEATURES: ", dict[key]["wn_features"])
+        print("PROPERTY NORMS FEATURES: ", dict[key]["new_features"], '\n')
+        input("Press Enter to continue...\n")
+
+
 def main():
     cf_dict = get_concepts_features()
     mapping = connect_resources(cf_dict)
-    print(mapping)
+    print_random_concept(mapping)
 
 
 if __name__ == "__main__":

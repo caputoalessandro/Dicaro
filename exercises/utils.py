@@ -2,6 +2,7 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import string
+import nltk
 
 
 def preprocess(text):
@@ -13,3 +14,13 @@ def preprocess(text):
     filtered_words = [word for word in text if word not in stop_words]
     lemmatizer = WordNetLemmatizer()
     return [lemmatizer.lemmatize(word) for word in filtered_words]
+
+
+def get_adjectives(text):
+    tagged = nltk.pos_tag(text)
+    return [word for word, tag in tagged if tag == "JJ"]
+
+
+def get_nouns(text):
+    tagged = nltk.pos_tag(text)
+    return [word for word, tag in tagged if tag == "NN"]

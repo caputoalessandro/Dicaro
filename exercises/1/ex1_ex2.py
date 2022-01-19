@@ -3,7 +3,7 @@ from res import RESOURCES_PATH
 import csv
 from collections import Counter
 import itertools
-from exercises.utils import preprocess
+from exercises.utils import preprocess, get_nouns, get_adjectives
 
 WORDS = ["courage", "paper", "apprehension", "sharpener"]
 
@@ -82,8 +82,8 @@ def get_similarty_explanation():
         single_word_defs = all_words_defs.get(word)
         words_counts = get_words_counts(single_word_defs)
         mfw = dict(words_counts.most_common(10)).keys()
-        tagged = nltk.pos_tag(list(mfw))
-        adj_noun = [word for word, tag in tagged if tag == "NN" or tag == "JJ"]
+        mfw = list(mfw)
+        adj_noun = get_nouns(mfw) + get_adjectives(mfw)
         result.append((word, adj_noun))
 
     return result
