@@ -2,8 +2,10 @@ from res import RESOURCES_PATH
 from exercises.utils import preprocess
 from nltk import pos_tag
 from nltk import word_tokenize
+from exercises.utils import lesk
+from nltk.corpus import wordnet as wn
 
-VERB_FORMS = ["bless", "blessed", "blessing", "blesses"]
+
 VERB = ["bless", "blessed"]
 INVALID_ARGUMENTS = ["“", "p", "v", "u", "2", "3", "→", "4",
                      "5", "6", "7", "8", "9", "0", "’", "bless",
@@ -51,8 +53,18 @@ def get_istances():
         return [get_istance(line) for line in lines if get_istance(line) is not None]
 
 
+def get_semantic_type(arg):
+    if wn.synsets(arg):
+        return wn.synsets(arg)[0].lexname()
+
+
+def get_semantic_types(istances):
+    return [(get_semantic_type(istance[0]), get_semantic_type(istance[1])) for istance in istances]
+
+
 def main():
     istances = get_istances()
+    st = get_semantic_types(istances)
     print()
 
 
