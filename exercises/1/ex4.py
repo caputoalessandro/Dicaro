@@ -3,14 +3,15 @@ from exercises.utils import preprocess
 from nltk import pos_tag
 from nltk import word_tokenize
 
-
 VERB_FORMS = ["bless", "blessed", "blessing", "blesses"]
 VERB = ["bless", "blessed"]
-TRASH = ["“", "p", "v", "u", "2", "3", "→", "4", "5", "6", "7", "8", "9", "0", "’"]
+INVALID_ARGUMENTS = ["“", "p", "v", "u", "2", "3", "→", "4",
+                     "5", "6", "7", "8", "9", "0", "’", "bless",
+                     "blessed", "blessing", "blesses"]
 
 
 def exraction_rule(word, tag):
-    return word not in VERB_FORMS and word not in TRASH and tag != "VERB" and tag != "ADV"
+    return word not in INVALID_ARGUMENTS and tag != "VERB" and tag != "ADV"
 
 
 def get_second_argument(tagged_words, index):
@@ -25,7 +26,7 @@ def get_first_argument(tagged_words, index):
             return word
 
 
-def get_neighbors_verb(line):
+def get_arguments(line):
     tagged = pos_tag(line, "universal")
     for word, tag in tagged:
         if word in VERB:
@@ -38,9 +39,9 @@ def get_neighbors_verb(line):
 
 def get_istance(line):
     tokenized = word_tokenize(line)
-    if VERB[0] in tokenized or VERB[1] in tokenized:
+    if set(VERB).intersection(tokenized):
         line = preprocess(line)
-        return get_neighbors_verb(line)
+        return get_arguments(line)
 
 
 def get_istances():
