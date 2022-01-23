@@ -1,4 +1,3 @@
-import nltk
 from res import RESOURCES_PATH
 import csv
 from collections import Counter

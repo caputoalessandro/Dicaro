@@ -1,9 +1,7 @@
 from res import RESOURCES_PATH
 import pandas as pd
-from exercises.lesk import lesk
-from exercises.utils import preprocess
+from exercises.utils import lesk, preprocess, get_nouns, get_adjectives
 from nltk.corpus import wordnet as wn
-from exercises.utils import get_nouns, get_adjectives
 import random
 
 
@@ -12,7 +10,7 @@ import random
 # 3 utilizzare le informazioni  offerte dalle property norms per scegliere il synset giusto
 # quindi wsd utilizzando quello già imlementato con radicioni
 # 4 trovato il synset, leghiamo il synset all'informazione,  ovvero facciamo  un match tra le feature
-# chhe troviamo nelle property norm e quelle he troviamo nella definizione di wn, in più diciamo
+# che troviamo nelle property norm e quelle he troviamo nella definizione di wn, in più diciamo
 # quali delle feature nelle porperty  norm potrebbero essere aggiunte
 
 norms_path = RESOURCES_PATH / "norms.dat"
