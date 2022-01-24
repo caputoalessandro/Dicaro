@@ -1,27 +1,6 @@
-from res import RESOURCES_PATH
-import csv
 from collections import Counter
 import itertools
-from exercises.utils import preprocess, get_nouns, get_adjectives
-
-WORDS = ["courage", "paper", "apprehension", "sharpener"]
-
-
-def initialize_dict():
-    return {word: [] for word in WORDS}
-
-
-def get_all_words_defs():
-    defs = initialize_dict()
-    defs_file = RESOURCES_PATH / "defs.csv"
-
-    with defs_file.open() as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            for word, col in zip(WORDS, row[1:]):
-                defs[word].append(preprocess(col))
-
-    return defs
+from exercises.utils import get_nouns, get_adjectives, get_all_words_defs, WORDS, initialize_dict
 
 
 def normalize(values):
