@@ -22,15 +22,17 @@ def get_score(hyponym,defs):
 def get_similarity(concept, defs):
     synset = wn.synsets(concept)[0]
     scores = [(hyponym, get_score(hyponym, defs)) for hyponym in synset.hyponyms()]
-    return max(scores, key=lambda x: x[0])[0]
+    max_score = max(scores, key=lambda x: x[1])
+    return max_score
 
 
 def get_form(defs):
     defs = [w for d in defs for w in d]
     hypernyms_freq = Counter(defs).most_common()
-    hypernyms = [t[0] for t in hypernyms_freq if have_hyponyms(t[0])][:10]
-    similarities = [(hypernym, get_similarity(hypernym, defs)) for hypernym in hypernyms]
-    return max(similarities, key=lambda x: x[0])[0]
+    hypernyms = [t[0] for t in hypernyms_freq if have_hyponyms(t[0])]
+    similarities = [get_similarity(hypernym, defs) for hypernym in hypernyms]
+    max_sim = max(similarities, key=lambda x: x[1])
+    return max_sim[0].name()
 
 
 def get_forms():
