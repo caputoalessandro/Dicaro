@@ -45,9 +45,16 @@ def get_forms():
     return {word: get_form(words_defs[word]) for word in WORDS}
 
 
+def print_results(forms):
+    print("{:<20} {:<20}".format("TARGET", "FORMS"))
+    print("{:<20} {:<20}".format("___________", "_________________________________________________________________________________"))
+    for target, forms in forms.items():
+        print("{:<20} {} - {} - {} - {}".format(target, *forms))
+
+
 def main():
     forms = get_forms()
-    print()
+    print_results(forms)
 
 
 if __name__ == "__main__":
