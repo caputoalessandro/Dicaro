@@ -8,6 +8,12 @@ from collections import Counter
 # 4. andiamo a vedere gli iponimi di quei synset  e  vediamo quali tra le gloss matchano meglio.
 
 
+def get_max_aggregate(similarities):
+    score = [(aggregate, sum(score for _, score in aggregate)) for aggregate in similarities]
+    max_aggregate = max(score, key=lambda x: x[1])
+    return [synset.name() for synset, score in max_aggregate[0]]
+
+
 def have_hyponyms(word):
     synsets = wn.synsets(word)
     return synsets and synsets[0].hyponyms()
@@ -22,26 +28,26 @@ def get_score(hyponym,defs):
 def get_similarity(concept, defs):
     synset = wn.synsets(concept)[0]
     scores = [(hyponym, get_score(hyponym, defs)) for hyponym in synset.hyponyms()]
-    max_score = max(scores, key=lambda x: x[1])
-    return max_score
+    scores.sort(reverse=True, key=lambda x: x[1])
+    return scores[:4]
 
 
 def get_form(defs):
     defs = [w for d in defs for w in d]
     hypernyms_freq = Counter(defs).most_common()
-    hypernyms = [t[0] for t in hypernyms_freq if have_hyponyms(t[0])]
+    hypernyms = [t[0] for t in hypernyms_freq if have_hyponyms(t[0])][:3]
     similarities = [get_similarity(hypernym, defs) for hypernym in hypernyms]
-    max_sim = max(similarities, key=lambda x: x[1])
-    return max_sim[0].name()
+    return get_max_aggregate(similarities)
 
 
 def get_forms():
     words_defs = get_all_words_defs()
-    return [get_form(words_defs[word]) for word in WORDS]
+    return {word: get_form(words_defs[word]) for word in WORDS}
 
 
 def main():
-    print(get_forms())
+    forms = get_forms()
+    print()
 
 
 if __name__ == "__main__":
