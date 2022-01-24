@@ -2,8 +2,8 @@ from res import RESOURCES_PATH
 from exercises.utils import preprocess
 from nltk import pos_tag
 from nltk import word_tokenize
-from exercises.utils import lesk
 from nltk.corpus import wordnet as wn
+from collections import Counter
 
 
 VERB = ["bless", "blessed"]
@@ -16,13 +16,13 @@ def exraction_rule(word, tag):
     return word not in INVALID_ARGUMENTS and tag != "VERB" and tag != "ADV"
 
 
-def get_second_argument(tagged_words, index):
+def get_object(tagged_words, index):
     for word, tag in tagged_words[index + 1:]:
         if exraction_rule(word, tag):
             return word
 
 
-def get_first_argument(tagged_words, index):
+def get_subject(tagged_words, index):
     for word, tag in reversed(tagged_words[:index]):
         if exraction_rule(word, tag):
             return word
@@ -33,17 +33,21 @@ def get_arguments(line):
     for word, tag in tagged:
         if word in VERB:
             index = line.index(word)
-            second_argument = get_first_argument(tagged, index)
-            first_argument = get_second_argument(tagged, index)
-            if first_argument and second_argument:
-                return [first_argument, second_argument]
+            subject = get_subject(tagged, index)
+            object = get_object(tagged, index)
+            if subject and object:
+                return [subject, object]
 
 
 def get_istance(line):
     tokenized = word_tokenize(line)
     if set(VERB).intersection(tokenized):
         line = preprocess(line)
-        return get_arguments(line)
+        arguments = get_arguments(line)
+        if VERB[0] in tokenized:
+            return arguments
+        elif VERB[1] in tokenized and arguments is not None:
+            return get_arguments(line).reverse()
 
 
 def get_istances():
@@ -55,17 +59,32 @@ def get_istances():
 
 def get_semantic_type(arg):
     if wn.synsets(arg):
-        return wn.synsets(arg)[0].lexname()
+        st = wn.synsets(arg)[0].lexname()
+        if "noun" in st:
+            return st.split('.')[1]
 
 
 def get_semantic_types(istances):
-    return [(get_semantic_type(istance[0]), get_semantic_type(istance[1])) for istance in istances]
+    return [get_semantic_type(istance[0]) for istance in istances], [get_semantic_type(istance[1]) for istance in istances]
+
+
+def print_semantic_clusters(subj, obj):
+    print("{:<20} {:<20}".format("Subject", "Object"))
+    print("{:<20} {:<20}".format("___________", "___________"))
+    for k1, k2 in zip(subj, obj):
+        print("{:<20} {:<20}".format(k1, k2))
 
 
 def main():
     istances = get_istances()
-    st = get_semantic_types(istances)
-    print()
+    subj, obj = get_semantic_types(istances)
+
+    subj_freqs = Counter(subj)
+    obj_freqs = Counter(obj)
+    subj_freqs.pop(None)
+    obj_freqs.pop(None)
+
+    print_semantic_clusters(subj_freqs, obj_freqs)
 
 
 if __name__ == "__main__":
