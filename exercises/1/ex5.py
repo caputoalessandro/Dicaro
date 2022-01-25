@@ -29,7 +29,7 @@ def get_similarity(concept, defs):
     synset = wn.synsets(concept)[0]
     scores = [(hyponym, get_score(hyponym, defs)) for hyponym in synset.hyponyms()]
     scores.sort(reverse=True, key=lambda x: x[1])
-    return scores[:4]
+    return scores[:5]
 
 
 def get_form(defs):
@@ -47,9 +47,11 @@ def get_forms():
 
 def print_results(forms):
     print("{:<20} {:<20}".format("TARGET", "FORMS"))
-    print("{:<20} {:<20}".format("___________", "_________________________________________________________________________________"))
+    print("{:<20} {:<20}".format("___________",
+                                 "__________________________________________________"
+                                 "__________________________________________________"))
     for target, forms in forms.items():
-        print("{:<20} {} - {} - {} - {}".format(target, *forms))
+        print("{:<20} {} - {} - {} - {} - {}".format(target, *forms))
 
 
 def main():

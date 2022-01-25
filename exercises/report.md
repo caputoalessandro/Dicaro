@@ -99,3 +99,29 @@ object               object
 possession           body                
 animal               Tops                
 shape                substance  
+
+### 1.5
+In questo esercizio abbiamo deciso di considerare i 3 termini più frequenti incontrati nelle definizioni come iperonimi 
+del  concetto da ricercare.
+Abbiamo visitato tutti gli iponimi di questi termini e abbiamo calcolato uno score, sono stati trattenuti quindi
+i 5 iponimi con lo score più alto.
+Lo score equivale al numero  di termini in comune tra l'insieme delle definizioni e la gloss dell'iponimo in questione.
+A questo punto, per ogni concetto abbiamo ottenuto 3 insiemi di iponimi, con un apposita funzione abbiamo scelto 
+l'inisieme di iponimi la cui somma degli score è più alta.
+
+
+TARGET               FORMS               
+___________          ____________________________________________________________________________________________________
+courage              physical_ability.n.01 - penetration.n.04 - form.n.14 - magical_ability.n.01 - midas_touch.n.01
+paper                composite_material.n.01 - paper.n.01 - packing_material.n.01 - aggregate.n.02 - bimetal.n.01
+apprehension         apprehension.n.01 - panic.n.01 - creeps.n.02 - intimidation.n.03 - stage_fright.n.01
+sharpener            drill.n.01 - jaws_of_life.n.01 - plow.n.01 - upset.n.04 - abrader.n.01
+
+
+Come possiamo vedere, per "paper" e "apprehension" il task è riuscito, mentre per i concetti "courage" e "sharpener" no.
+Abbiamo effettuato diverse prove variando  il numero di iperonimi.
+Abbiamo notato che aumentando troppo quuesta quantità i risultati  peggiorano. 
+Ciò è dovuto al fatto che la funzione considera termini meno frequenti e considera quindi iponimi più lontani
+dai concetti target. 
+Questi risultati ci mostrano come gli score degli iponimi legati alle parole
+meno frequenti, non siano lontani dagli score degli iponimi legati a parole più frequenti.
