@@ -1,10 +1,6 @@
 from collections import Counter
 import itertools
-from exercises.utils import get_nouns, get_adjectives, get_all_words_defs, WORDS, initialize_dict
-
-
-def normalize(values):
-    return [(float(v) - min(values)) / (max(values) - min(values)) for v in values]
+from exercises.utils import get_nouns, get_adjectives, get_all_words_defs, WORDS, initialize_dict, normalize
 
 
 def get_words_counts(defs):

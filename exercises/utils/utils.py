@@ -51,3 +51,7 @@ def get_all_words_defs():
                 defs[word].append(preprocess(col))
 
     return defs
+
+
+def normalize(values):
+    return [(float(v) - min(values)) / (max(values) - min(values)) for v in values]
