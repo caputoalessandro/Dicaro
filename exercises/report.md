@@ -133,7 +133,7 @@ meno frequenti, non siano lontani dagli score degli iponimi legati a parole più
 In questa esercitazione ho cercato di implementare una algoritmo di segmentazione simile a quello riportato 
 nell'articolo di Marti A Hearst. 
 
-La funzione ha un parametro ovvero il numero di iterazioni da effettuare.
+La funzione ha 3 parametri,testo, numero di iterazioni e numero di breakpoints.
 Nella prima iterazione i breakpoint vengono istanziati in maniera che siano quasi equidistanti tra di loro.
 
 l'unità è la frase, quindi inizialmente avremo k segmenti con lo stesso numero di frasi per ognuno di loro.
@@ -163,15 +163,21 @@ A questo punto verrà selezionata la segmentazione con lo score maggiore.
 L'algoritmo è stato testato ssu 5 articoli diversi, di seguito vediamo un possibile output:
 
 
-[15, 29, 39, 49, 59, 59, 79, 83, 104, 112, 120] 3.0642361111111107
-[23, 29, 39, 52, 70, 78, 91, 103, 103, 122] 4.053398058252427
-[26, 29, 39, 49, 63, 79, 89, 106, 123] 3.6234042553191492
-[25, 29, 39, 58, 70, 76, 100, 108, 124] 2.6103896103896105
-[26, 29, 39, 55, 63, 93, 111, 126] 2.030578512396694
-[25, 29, 39, 50, 53, 94, 100, 111, 124] 1.674964438122333
-[26, 29, 39, 43, 47, 83, 85, 98, 107, 122] 2.5419440745672435
-[25, 29, 34, 36, 47, 72, 76, 90, 106, 123] 3.6419213973799125
-[26, 29, 29, 37, 65, 69, 99, 107, 123] 2.1214351425942963
-[25, 26, 28, 60, 95, 112, 128] 2.0869242199108466
+[13, 27, 35, 46, 53, 73, 79, 88, 98, 107] 2.378531073446328
+[15, 29, 38, 46, 58, 73, 81, 89, 101, 107] 3.6506024096385543
+[18, 31, 39, 40, 61, 79, 85, 90, 105, 107] 4.415384615384615
+[21, 33, 39, 41, 63, 81, 87, 88, 105, 107] 4.0666666666666655
+[22, 35, 40, 46, 73, 79, 87, 89, 105, 107] 2.65531914893617
+[27, 38, 41, 53, 73, 81, 88, 90, 105, 107] 3.3195876288659796
+[29, 39, 40, 58, 79, 85, 89, 95, 105, 107] 2.8185840707964602
+[31, 39, 41, 61, 81, 87, 90, 96, 105, 107] 2.458015267175573
+[33, 40, 46, 63, 85, 88, 89, 97, 105, 107] 2.3910034602076125
+[35, 41, 53, 58, 87, 88, 90, 98, 105, 107] 2.538205980066445
 
-Best segments:  [23, 29, 39, 52, 70, 78, 91, 103, 103, 122] 4.053398058252427
+Best segments:  [18, 31, 39, 40, 61, 79, 85, 90, 105, 107] 4.415384615384615
+
+i numeri nella lista rappresentando l'indice della frase in cui si è posizionato il breakpoint.
+Facendo dei test si può vedere come all'aumentare dei breakpoint il punteggio intra-gruppo aumenta. 
+Ciò deriva dal fatto che il punteggio si basa sulla sovrapposizione tra termini all'interno del cluster. 
+Avere più breakpoint singnifica avere cluster più piccoli e di conseguenza, sovrapposizione maggiore.
+

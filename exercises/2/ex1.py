@@ -63,21 +63,6 @@ def get_stops(indexes, start):
     return forward_stop, backward_stop
 
 
-# def find_breakpoint(sentences, start, indexes):
-#     forward_stop, backward_stop = get_stops(indexes, start)
-#     forward_interval = zip(sentences[start+1: forward_stop], sentences[start + 2:forward_stop])
-#     backward_interval = zip(sentences[backward_stop:start+1], sentences[backward_stop+2:start])
-#     forward_bp = find(forward_interval, sentences)
-#     backward_bp = find(backward_interval, sentences)
-#
-#     if backward_bp and forward_bp and abs(start - forward_bp) > abs(start - backward_bp):
-#         return backward_bp
-#     elif forward_bp:
-#         return forward_bp
-#     else:
-#         return start
-
-
 def find_breakpoint(sentences, start, prev_bp, next_bp):
     forward_interval = zip(sentences[start: next_bp], sentences[start + 1:next_bp])
     backward_interval = zip(sentences[prev_bp:start], sentences[prev_bp+1:start])
@@ -110,24 +95,11 @@ def make_pairs_indexes(sentences, bps):
     return pairs
 
 
-# def update_breakpoints(segments, sentences):
-#     segments_indexes = get_bp_indexes(segments)
-#     indexes = [s[1] for s in segments_indexes]
-#     res = [find_breakpoint(sentences, index, indexes) for segment, index in segments_indexes]
-#     return make_pairs_indexes(sentences, res)
-#
-#
-# def update_segments(sentences, segments):
-#     new_bps = update_breakpoints(segments, sentences)
-#     return [sentences[start:stop] for start, stop in new_bps]
-
-
 def update_segments(sentences, segments):
     result = []
 
     for i in range(len(segments)):
         segments_indexes = get_bp_indexes(segments)
-        # bps = [s[1] for s in segments_indexes]
         bp = segments_indexes[i][1]
 
         result_bps = get_bp_indexes(result)
@@ -142,7 +114,6 @@ def update_segments(sentences, segments):
             next_bp = len(sentences)
 
         new_bp = find_breakpoint(sentences, bp, prev_bp, next_bp)
-
         result.append(sentences[prev_bp:new_bp])
 
     return result
@@ -158,13 +129,12 @@ def get_sentences(text):
     return [preprocess(sentence) for sentence in sentences]
 
 
-def segmentation(text, iterations):
+def segmentation(text, iterations, bps):
     sentences = get_sentences(text)
-    segments = get_segments(sentences, 10)
+    segments = get_segments(sentences, bps)
     segmentation_results = []
 
     for i in range(iterations):
-        # segments = update_segments(sentences, segments)
         segments = update_segments(sentences, segments)
         segments = [segment for segment in segments if segment != []]
         segs_indexes = get_bp_indexes(segments)
@@ -189,7 +159,7 @@ def main():
     for article in articles_path.iterdir():
         with open(article) as f:
             text = f.read()
-            segmentation_result, best = segmentation(text, 10)
+            segmentation_result, best = segmentation(text, 10, 20)
             print_results(segmentation_result, best)
 
 
