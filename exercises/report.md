@@ -3,14 +3,14 @@
 ## 1
 
 ### 1.1 - 1.2
-In questo esercizio abbiamo provato due calcoli di similarità differenti.
+In questo esercizio ho provato due calcoli di similarità differenti.
 Il primo metodo consiste nel misurare la similarità come rapporto tra 
 la cardinalità dell'intersezione tra tutte le definizioni e la lunghezza media delle definizioni.
 é stato impossibile applicare questo metodo in quanto l'intersezione tra le definizioni è vuota.
-Nel secondo metodo abbiamo calcolato la  frequenza di  ogni parola utilizzata nelle definizioni
-e abbiamo calcolato la similarità com rapporto tra la somma delle frequenze associate ad ogni parola,
+Nel secondo metodo ho calcolato la  frequenza di  ogni parola utilizzata nelle definizioni
+e ho calcolato la similarità com rapporto tra la somma delle frequenze associate ad ogni parola,
 diviso la lunghezza della definizione.
-In questo modo abbiamo regolarizzato i punteggi, pesando la somma delle frequenze in base al numero di parole utilizzate.
+In questo modo ho regolarizzato i punteggi, pesando la somma delle frequenze in base al numero di parole utilizzate.
 
 I risultati osservati sono stati:
 
@@ -31,12 +31,12 @@ Le definizioni dei concetti atratti e generici sono caratterizzate da una variab
 di conseguenza le frequenze associate ai termini sono più basse.
 Al contrario, le definizioni dei concetti concreti e specifici sono caratterizzate da una variabilità più bassa
 di termini, di conseguenza le frequenze associate ai termini sono più alte.
-Per la misura di similarità che abbiamo scelto quindi i punteggi dei concetti atratti e generici sono più bassi 
+Per la misura di similarità che ho scelto quindi i punteggi dei concetti atratti e generici sono più bassi 
 rispetto ai concetti concreti e specifici.
 
 
 ### 1.3
-In questa esercitazione abbiamo collegato collegato due risorse, wordnet e property norms.
+In questa esercitazione ho collegato due risorse, wordnet e property norms.
 Dal file delle property norms sono state estratte due colonne, "concept" e "feature", le informazioni sono state 
 organizzate secondo un dizionario contenente il concetto come chiave e una lista di feature come valore.
 Le feature di wordnet sono state estratte andando a prendere aggettivi e nomi dalla descrizione del synset 
@@ -59,10 +59,10 @@ PROPERTY NORMS FEATURES:  ['liquid', 'flat', 'metal']
 
 
 ### 1.4
-In questa esercitazione abbiamo scelto come verbo transitivo "bless".
+In questa esercitazione ho scelto come verbo transitivo "bless".
 Abbiamo deciso di costruire il corpus attraverso la piattaforma Sketch engine utilizzando come parole chiave
 "bless", "theology" e "religion". 
-Così facendo abbiamo ottenuto  un corpus di circa trentamila frasi.
+Così facendo ho ottenuto  un corpus di circa trentamila frasi.
 Abbiamo estratto dal corpus tutte le frasi  in cui appariva la parola "bless" e la sua forma passiva "blessed" ottenendo 
 così più di mille istanze da esaminare.
 
@@ -101,12 +101,12 @@ animal               Tops
 shape                substance  
 
 ### 1.5
-In questo esercizio abbiamo deciso di considerare i 3 termini più frequenti incontrati nelle definizioni come iperonimi 
+In questo esercizio ho deciso di considerare i 3 termini più frequenti incontrati nelle definizioni come iperonimi 
 del  concetto da ricercare.
-Abbiamo visitato tutti gli iponimi di questi termini e abbiamo calcolato uno score, sono stati trattenuti quindi
+Abbiamo visitato tutti gli iponimi di questi termini e ho calcolato uno score, sono stati trattenuti quindi
 i 5 iponimi con lo score più alto.
 Lo score equivale al numero  di termini in comune tra l'insieme delle definizioni e la gloss dell'iponimo in questione.
-A questo punto, per ogni concetto abbiamo ottenuto 3 insiemi di iponimi, con un apposita funzione abbiamo scelto 
+A questo punto, per ogni concetto ho ottenuto 3 insiemi di iponimi, con un apposita funzione ho scelto 
 l'inisieme di iponimi la cui somma degli score è più alta.
 
 
@@ -125,3 +125,53 @@ Ciò è dovuto al fatto che la funzione considera termini meno frequenti e consi
 dai concetti target. 
 Questi risultati ci mostrano come gli score degli iponimi legati alle parole
 meno frequenti, non siano lontani dagli score degli iponimi legati a parole più frequenti.
+
+## 2
+
+### 2.1
+
+In questa esercitazione ho cercato di implementare una algoritmo di segmentazione simile a quello riportato 
+nell'articolo di Marti A Hearst. 
+
+La funzione ha un parametro ovvero il numero di iterazioni da effettuare.
+Nella prima iterazione i breakpoint vengono istanziati in maniera che siano quasi equidistanti tra di loro.
+
+l'unità è la frase, quindi inizialmente avremo k segmenti con lo stesso numero di frasi per ognuno di loro.
+le tokenizzazione in frasi è stata effettuata con le  funzioni  di libreria nltk. 
+
+La funzione chiave è "find_breakpoints" che è quella che aggiorna i breakpoint esistenti.
+la funzione prende in input il breakpoint odierno e a partire da quel punto effettua due ricerche, una in avanti e una 
+all'indietro.
+l'algoritmo verifica la sovrapposizione tra due frasi alla volta e appena trova  un punto con sovrapposizione zero 
+restituisce il breakpoint. 
+In questo modo abbiamo trovato un possibile punto in cui è avvenuto un possibile cambio di tema.
+la funzione find breakpoint quindi troverà due brakpoint, uno risultate dalla ricerca in avanti e uno risultante dalla 
+ricerca all'indietro. A questo punto verrà selezionato il breakpoint più vicino.
+Se non vengono trovati punti con sovrapposizione zero, il breakpoint non viene aggiornato.
+
+Una volta trovati i nuovi breakpoint si procede al calcolo della coesione intra-gruppo.
+Per fare ciò ho creato dei vettori per ogni frase all'interno del segmento e il punteggio è stato ottenuto
+attraverso il prodotto interno di quest'ultimi.
+Il punteggio del singolo segmento equivale alla somma delle componenti del vettore ottenuto dal prodotto interno. 
+
+Questo punteggio ci è servito a valutare la qualità della segmentazione.
+L'algoritmo effettua n iterazioni e quindi n possinili  segmentazioni.
+Ad ogni segmentazione è associato uno score che è la somma dei punteggi intra-gruppo.
+
+A questo punto verrà selezionata la segmentazione con lo score maggiore.
+
+L'algoritmo è stato testato ssu 5 articoli diversi, di seguito vediamo un possibile output:
+
+
+[15, 29, 39, 49, 59, 59, 79, 83, 104, 112, 120] 3.0642361111111107
+[23, 29, 39, 52, 70, 78, 91, 103, 103, 122] 4.053398058252427
+[26, 29, 39, 49, 63, 79, 89, 106, 123] 3.6234042553191492
+[25, 29, 39, 58, 70, 76, 100, 108, 124] 2.6103896103896105
+[26, 29, 39, 55, 63, 93, 111, 126] 2.030578512396694
+[25, 29, 39, 50, 53, 94, 100, 111, 124] 1.674964438122333
+[26, 29, 39, 43, 47, 83, 85, 98, 107, 122] 2.5419440745672435
+[25, 29, 34, 36, 47, 72, 76, 90, 106, 123] 3.6419213973799125
+[26, 29, 29, 37, 65, 69, 99, 107, 123] 2.1214351425942963
+[25, 26, 28, 60, 95, 112, 128] 2.0869242199108466
+
+Best segments:  [23, 29, 39, 52, 70, 78, 91, 103, 103, 122] 4.053398058252427

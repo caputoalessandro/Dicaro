@@ -39,11 +39,6 @@ def get_segmentation_score(segments):
     return sum(normalize(scores))
 
 
-def get_sentences(text):
-    sentences = nltk.tokenize.sent_tokenize(text)
-    return [preprocess(sentence) for sentence in sentences]
-
-
 def find(interval, sentences):
     for s1, s2 in interval:
         new_score = len(set(s1) & set(s2))
@@ -68,10 +63,24 @@ def get_stops(indexes, start):
     return forward_stop, backward_stop
 
 
-def find_breakpoint(sentences, start, indexes):
-    forward_stop, backward_stop = get_stops(indexes, start)
-    forward_interval = zip(sentences[start: forward_stop], sentences[start + 1:forward_stop])
-    backward_interval = zip(sentences[backward_stop:start], sentences[backward_stop:start-1])
+# def find_breakpoint(sentences, start, indexes):
+#     forward_stop, backward_stop = get_stops(indexes, start)
+#     forward_interval = zip(sentences[start+1: forward_stop], sentences[start + 2:forward_stop])
+#     backward_interval = zip(sentences[backward_stop:start+1], sentences[backward_stop+2:start])
+#     forward_bp = find(forward_interval, sentences)
+#     backward_bp = find(backward_interval, sentences)
+#
+#     if backward_bp and forward_bp and abs(start - forward_bp) > abs(start - backward_bp):
+#         return backward_bp
+#     elif forward_bp:
+#         return forward_bp
+#     else:
+#         return start
+
+
+def find_breakpoint(sentences, start, prev_bp, next_bp):
+    forward_interval = zip(sentences[start: next_bp], sentences[start + 1:next_bp])
+    backward_interval = zip(sentences[prev_bp:start], sentences[prev_bp+1:start])
     forward_bp = find(forward_interval, sentences)
     backward_bp = find(backward_interval, sentences)
 
@@ -86,35 +95,67 @@ def find_breakpoint(sentences, start, indexes):
 def get_bp_indexes(segments):
     bp_indexes = [(None, 0)]
     for segment in segments:
-        index = len(segment) - 1 + bp_indexes[-1][1]
+        index = len(segment) + bp_indexes[-1][1]
         bp_indexes.append((segment, index))
     bp_indexes.remove((None, 0))
-    ind = [i[1] for i in bp_indexes]
     return bp_indexes
 
 
-def update_breakpoints(segments, sentences):
-    segments_indexes = get_bp_indexes(segments)
-    indexes = [s[1] for s in segments_indexes]
-    res = [find_breakpoint(sentences, index, indexes) for segment, index in segments_indexes]
-
-    pairs=[]
-    pairs.append((0, res[0]))
-    for v1, v2 in zip(res, res[1:]):
-        pairs.append((v1+1, v2))
-    pairs.append((res[-1]+1, len(sentences)))
-
+def make_pairs_indexes(sentences, bps):
+    pairs = []
+    pairs.append((0, bps[0]))
+    for v1, v2 in zip(bps, bps[1:]):
+        pairs.append((v1 + 1, v2))
+    pairs.append((bps[-1] + 1, len(sentences)))
     return pairs
 
 
+# def update_breakpoints(segments, sentences):
+#     segments_indexes = get_bp_indexes(segments)
+#     indexes = [s[1] for s in segments_indexes]
+#     res = [find_breakpoint(sentences, index, indexes) for segment, index in segments_indexes]
+#     return make_pairs_indexes(sentences, res)
+#
+#
+# def update_segments(sentences, segments):
+#     new_bps = update_breakpoints(segments, sentences)
+#     return [sentences[start:stop] for start, stop in new_bps]
+
+
 def update_segments(sentences, segments):
-    new_bps = update_breakpoints(segments, sentences)
-    return [sentences[start:stop] for start, stop in new_bps]
+    result = []
+
+    for i in range(len(segments)):
+        segments_indexes = get_bp_indexes(segments)
+        # bps = [s[1] for s in segments_indexes]
+        bp = segments_indexes[i][1]
+
+        result_bps = get_bp_indexes(result)
+        if i != 0:
+            prev_bp = result_bps[-1][1]
+        else:
+            prev_bp = 0
+
+        if i < len(segments_indexes)-1:
+            next_bp = segments_indexes[i+1][1]
+        else:
+            next_bp = len(sentences)
+
+        new_bp = find_breakpoint(sentences, bp, prev_bp, next_bp)
+
+        result.append(sentences[prev_bp:new_bp])
+
+    return result
 
 
 def get_segments(sentences, k):
     segments = np.array_split(sentences, k)
     return [[sentence for sentence in segment] for segment in segments]
+
+
+def get_sentences(text):
+    sentences = nltk.tokenize.sent_tokenize(text)
+    return [preprocess(sentence) for sentence in sentences]
 
 
 def segmentation(text, iterations):
@@ -123,6 +164,7 @@ def segmentation(text, iterations):
     segmentation_results = []
 
     for i in range(iterations):
+        # segments = update_segments(sentences, segments)
         segments = update_segments(sentences, segments)
         segments = [segment for segment in segments if segment != []]
         segs_indexes = get_bp_indexes(segments)
@@ -137,7 +179,7 @@ def segmentation(text, iterations):
 def print_results(segmentation_result, best):
     for segment, score, indexes in segmentation_result:
         print(indexes, score)
-    print("\nBest segments: ", best[1], best[2])
+    print("\nBest segments: ", best[2], best[1])
     print("______________________________________________________________")
     print("\n")
 
