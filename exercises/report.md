@@ -181,3 +181,27 @@ Facendo dei test si può vedere come all'aumentare dei breakpoint il punteggio i
 Ciò deriva dal fatto che il punteggio si basa sulla sovrapposizione tra termini all'interno del cluster. 
 Avere più breakpoint singnifica avere cluster più piccoli e di conseguenza, sovrapposizione maggiore.
 
+### 2.2
+
+In questa esercitazione ho utilizzato la libreria gensim per effettuare topic modeling. 
+Il modello utilizzato è LDA, ed è stato applicato su due corpus diversi.
+Il COCA (Corpus of Contemporary American English) è uno dei corpus più grandi di inglese americano esistenti
+ed è diviso in 8 categorie. 
+Al fine di non allungare troppo i tempi di esecuzione, è stata selezionata solo la categoria "newspaper".
+Il corpus "coronavirus" è una raccolta di frasi riguardanti il covid dal 2020 in poi, estrapolate da giornali e 
+magazine online.
+
+I corpus sono stati divisi in 10 blocchi ed è stato effettuato un preprocessing. 
+Dopo il preprocessing sono state trattenute le content word: nomi, verbi, avverbi e aggettivi.
+Il modello è stato settato per estrapolare 5 topics dal corpus COCA e 3 topic dal corpus coronavirus.  
+In seguto ho sfruttato le librerie di gensim per produrre un file html per la visualizzazione dei dati.
+
+I file html sono nella cartella "Dicaro/exercises/2/visualizations".
+
+Il file di visualizzazione è diviso in due sezioni interattive.
+Nella sezione di sinistra possiamo vedere una rappresentazione spaziale dei topic estrapolati effettuata attraverso 
+scaling multidimensionale.
+La grandezza della circonferenza indica la distribuzione marginale dei termini all'interno del topic.
+Nella sezione di destra troviamo un grafico a barre che ci mostra i 30 termini più frequenti 
+e le rispettive frequenze.
+

@@ -5,6 +5,7 @@ import string
 from nltk import pos_tag
 from res import RESOURCES_PATH
 import csv
+import re
 
 
 def preprocess(text):
@@ -13,7 +14,7 @@ def preprocess(text):
     text_p = "".join([char for char in text if char not in string.punctuation])
     text = word_tokenize(text_p)
     stop_words = stopwords.words('english')
-    filtered_words = [word for word in text if word not in stop_words]
+    filtered_words = [word for word in text if word not in stop_words and word != "p" and word != "h" and not re.search(r'\d\d\d\d\d\d\d', word)]
     lemmatizer = WordNetLemmatizer()
     return [lemmatizer.lemmatize(word) for word in filtered_words]
 

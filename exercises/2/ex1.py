@@ -47,22 +47,6 @@ def find(interval, sentences):
     return None
 
 
-def get_stops(indexes, start):
-    forward_stop = backward_stop = start
-    index = indexes.index(start)
-
-    if index != (len(indexes)-1):
-        forward_stop = indexes[index + 1]
-
-    if index != 0:
-        backward_stop = indexes[index - 1] + 1
-
-    if index == 0:
-        backward_stop = 0
-
-    return forward_stop, backward_stop
-
-
 def find_breakpoint(sentences, start, prev_bp, next_bp):
     forward_interval = zip(sentences[start: next_bp], sentences[start + 1:next_bp])
     backward_interval = zip(sentences[prev_bp:start], sentences[prev_bp+1:start])
@@ -86,23 +70,14 @@ def get_bp_indexes(segments):
     return bp_indexes
 
 
-def make_pairs_indexes(sentences, bps):
-    pairs = []
-    pairs.append((0, bps[0]))
-    for v1, v2 in zip(bps, bps[1:]):
-        pairs.append((v1 + 1, v2))
-    pairs.append((bps[-1] + 1, len(sentences)))
-    return pairs
-
-
 def update_segments(sentences, segments):
     result = []
 
     for i in range(len(segments)):
         segments_indexes = get_bp_indexes(segments)
         bp = segments_indexes[i][1]
-
         result_bps = get_bp_indexes(result)
+
         if i != 0:
             prev_bp = result_bps[-1][1]
         else:
@@ -159,7 +134,7 @@ def main():
     for article in articles_path.iterdir():
         with open(article) as f:
             text = f.read()
-            segmentation_result, best = segmentation(text, 10, 20)
+            segmentation_result, best = segmentation(text, 10, 10)
             print_results(segmentation_result, best)
 
 
