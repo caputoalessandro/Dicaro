@@ -4,10 +4,7 @@ from exercises.utils import preprocess, get_content_words
 import nltk
 import json
 import subprocess
-import time
 import os.path
-import graphistry
-import pandas
 
 
 def get_sents_for_categories():
@@ -40,7 +37,6 @@ def get_words_for_categories():
         content_words = get_content_words(prep_words)
         fdist = nltk.FreqDist(w for w in content_words)
         result[category] = fdist.most_common()
-        # result[category].append(tuple(fdist.items()))
     return result
 
 
@@ -59,18 +55,13 @@ def create_graph(category_to_words, to_keep):
             g.merge(USED_IN(word_node, category_node, freq=freq), "Word", "lemma")
 
 
-toy_nodes = {
-    "action": [("a", 10)],
-    "horror": [("b", 20), ("a", 30)]
-}
-
-
 def main():
     subprocess.Popen(['bash', '-c', '. docker.sh; run_docker'])
     save_data_in_json()
     categories_for_words = get_words_for_categories_from_json()
-    create_graph(categories_for_words, 10)
+    create_graph(categories_for_words, 50)
 
 
 if __name__ == "__main__":
     main()
+

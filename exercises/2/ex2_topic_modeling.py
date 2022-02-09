@@ -36,7 +36,7 @@ def print_topics(lda_model):
 
 def make_visualization(lda_model, corpus, id2word, name):
     vis = pyLDAvis.gensim_models.prepare(lda_model, corpus, id2word)
-    pyLDAvis.save_html(vis, f'visualizations/LDA_{name}_visualization.html')
+    pyLDAvis.save_html(vis, f'topic_modeling_visualizations/LDA_{name}_visualization.html')
 
 
 def get_segments(sentences, k):
