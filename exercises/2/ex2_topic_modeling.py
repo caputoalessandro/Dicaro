@@ -7,13 +7,7 @@ import pyLDAvis
 import pyLDAvis.gensim_models
 import numpy as np
 import nltk
-from nltk import pos_tag
-from exercises.utils import preprocess
-
-
-def get_content_words(text):
-    tagged = pos_tag(text, "universal")
-    return [word for word, tag in tagged if tag == "NOUN" or tag == "ADJ" or tag == "VERB" or tag == "ADV"]
+from exercises.utils import preprocess, get_content_words
 
 
 def get_preprocessed_text(path):

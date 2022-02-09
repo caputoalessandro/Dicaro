@@ -56,3 +56,9 @@ def get_all_words_defs():
 
 def normalize(values):
     return [(float(v) - min(values)) / (max(values) - min(values)) for v in values]
+
+
+def get_content_words(text):
+    tagged = pos_tag(text, "universal")
+    return [word for word, tag in tagged if tag == "NOUN" or tag == "ADJ" or tag == "VERB" or tag == "ADV"]
+

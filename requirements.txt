@@ -3,3 +3,5 @@ pyLDAvis
 numpy
 pandas
 gensim
+py2neo
+nltk.download('brown')
