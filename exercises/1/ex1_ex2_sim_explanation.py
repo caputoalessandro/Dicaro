@@ -65,21 +65,24 @@ def get_similarty_explanation():
 
 def print_results(similarities, aggregations, explanation):
 
-    print("------ SIMILARITIES ------")
+    print("|Concept|Similarity|")
+    print("|  ---  |  ---  |")
     for word, similarity in similarities.items():
-        print(word, similarity)
+        print(f'|{word}|{similarity:.2f}|')
 
     print("\n")
 
-    print("------ AGGREGATIONS ------")
+    print("|Aggregation|Similarity|")
+    print("|  ---  |  ---  |")
     for aggregation, mean_similarity in aggregations:
-        print(aggregation, mean_similarity)
+        print(f'|{aggregation}|{mean_similarity:.2f}|')
 
     print("\n")
 
-    print("------ MOST FREQUENT WORDS ------")
+    print("|Concept| Most frequent words|")
+    print("|  ---  |  ---  |")
     for word, frequent_words in explanation:
-        print(word, frequent_words)
+        print(f'|{word}| {frequent_words}|')
 
 
 def main():

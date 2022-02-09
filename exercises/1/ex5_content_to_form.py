@@ -46,12 +46,10 @@ def get_forms():
 
 
 def print_results(forms):
-    print("{:<20} {:<20}".format("TARGET", "FORMS"))
-    print("{:<20} {:<20}".format("___________",
-                                 "__________________________________________________"
-                                 "__________________________________________________"))
+    print("|{:<20}| {:<20}|".format("TARGET", "FORMS"))
+    print("|{:<20}| {:<20}|".format(" ----------------- ", "---------------"))
     for target, forms in forms.items():
-        print("{:<20} {} - {} - {} - {} - {}".format(target, *forms))
+        print("|{:<20}| {}, {}, {}, {}, {}|".format(target, *forms))
 
 
 def main():

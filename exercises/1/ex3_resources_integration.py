@@ -76,9 +76,11 @@ def connect_resources(cf_dict):
 def print_random_concept(dict):
     while 1:
         key = random.choice(list(dict))
-        print("CONCEPT: ", key)
-        print("WORDNET FEATURES: ", dict[key]["wn_features"])
-        print("PROPERTY NORMS FEATURES: ", dict[key]["new_features"], '\n')
+        print("|   |   |")
+        print("| --- | --- |")
+        print(f"|CONCEPT|{key}|")
+        print(f"|WORDNET FEATURES|{dict[key]['wn_features']}|")
+        print(f"|PROPERTY NORMS FEATURES|{dict[key]['new_features']}|")
         input("Press Enter to continue...\n")
 
 

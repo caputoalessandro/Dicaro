@@ -59,7 +59,7 @@ def main():
     subprocess.Popen(['bash', '-c', '. docker.sh; run_docker'])
     save_data_in_json()
     categories_for_words = get_words_for_categories_from_json()
-    create_graph(categories_for_words, 50)
+    create_graph(categories_for_words, 5)
 
 
 if __name__ == "__main__":

@@ -122,9 +122,11 @@ def segmentation(text, iterations, bps):
 
 
 def print_results(segmentation_result, best):
+    print("| Breakpoints | Segmentation score |")
+    print("| --- | --- |")
     for segment, score, indexes in segmentation_result:
-        print(indexes, score)
-    print("\nBest segments: ", best[2], best[1])
+        print(f"| {str(indexes)[1:-1]} | {score:.2f} |")
+    print("\nBest segments: ", best[2], round(best[1], 2))
     print("______________________________________________________________")
     print("\n")
 

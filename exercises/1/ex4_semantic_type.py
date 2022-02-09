@@ -69,10 +69,10 @@ def get_semantic_types(istances):
 
 
 def print_semantic_clusters(subj, obj):
-    print("{:<20} {:<20}".format("Subject", "Object"))
-    print("{:<20} {:<20}".format("___________", "___________"))
+    print("|{:<20}| {:<20}|".format("Subject", "Object"))
+    print("|{:<20}| {:<20}|".format("___________", "___________"))
     for k1, k2 in zip(subj, obj):
-        print("{:<20} {:<20}".format(k1, k2))
+        print("|{:<20}| {:<20}|".format(k1, k2))
 
 
 def main():
