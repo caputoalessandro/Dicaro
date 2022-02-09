@@ -5,4 +5,3 @@ pandas
 gensim
 py2neo
 nltk.download('brown')
-graphistry
