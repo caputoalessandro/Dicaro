@@ -3,6 +3,11 @@ from nltk.corpus import brown
 from exercises.utils import preprocess, get_content_words
 import nltk
 import json
+import subprocess
+import time
+import os.path
+import graphistry
+import pandas
 
 
 def get_sents_for_categories():
@@ -13,9 +18,13 @@ def initialize_dict():
     return {category: None for category in brown.categories()}
 
 
-def save_in_json(data):
-    with open('brown_nodes.json', 'w') as fp:
-        json.dump(data, fp)
+def save_data_in_json():
+    if not os.path.isfile('brown_nodes.json'):
+        data = get_words_for_categories()
+        with open('brown_nodes.json', 'w') as fp:
+            json.dump(data, fp)
+    else:
+        print("File esistente")
 
 
 def get_words_for_categories_from_json():
@@ -30,19 +39,19 @@ def get_words_for_categories():
         prep_words = preprocess(" ".join(list(words)))
         content_words = get_content_words(prep_words)
         fdist = nltk.FreqDist(w for w in content_words)
-        result[category] = fdist.most_common(50)
+        result[category] = fdist.most_common()
         # result[category].append(tuple(fdist.items()))
     return result
 
 
-def create_graph(category_to_words):
+def create_graph(category_to_words, to_keep):
     g = Graph("neo4j://localhost:7687", auth=("neo4j", "test"))
     g.delete_all()
     USED_IN = Relationship.type("USED_IN")
 
     for category, words in category_to_words.items():
         category_node = Node("Category", lemma=category)
-        for word, freq in words:
+        for word, freq in words[:to_keep]:
             if not g.nodes.match("Word", lemma=word):
                 word_node = Node("Word", lemma=word)
             else:
@@ -57,10 +66,10 @@ toy_nodes = {
 
 
 def main():
-    # data = get_words_for_categories()
-    # save_in_json(data)
+    subprocess.Popen(['bash', '-c', '. docker.sh; run_docker'])
+    save_data_in_json()
     categories_for_words = get_words_for_categories_from_json()
-    create_graph(categories_for_words)
+    create_graph(categories_for_words, 10)
 
 
 if __name__ == "__main__":
